@@ -11,7 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class ProductFormComponent implements OnInit {
   categoriesObser$;
-  product = {};
+  product = <any>{};
   id;
     constructor(
       categoryService: CategoryService,
