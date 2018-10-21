@@ -15,8 +15,8 @@ export class ProductService {
      this.db.list('/products').push(product);
     }
     getAll() {
-      return this.db.list<productModel>('/products'); // .snapshotChanges().pipe(
-       // map( changes => changes.map(c => ({ key: c.payload.key, ...c.payload.val()}))));
+      return this.db.list<productModel>('/products').snapshotChanges().pipe(
+       map( changes => changes.map(c => ({ key: c.payload.key, ...c.payload.val()}))));
     }
 
     getProduct(productId) {

@@ -18,8 +18,8 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   itemsCount: number;
 
   constructor( private productService: ProductService) {
-   this.subscription =  this.productService.getAll().snapshotChanges().pipe(
-    map(changes => changes.map(c => ({ Key: c.payload.key, ...c.payload.val() }))))
+   this.subscription =  this.productService.getAll().pipe(
+    map(changes => changes.map(c => ({ key: c.key, category: c.category, imageUrl: c.imageUrl, title: c.title, price: c.price }))))
    .subscribe(products => {
      this.productArry = products;
      this.initializeTable(this.productArry);

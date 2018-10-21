@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProductService } from '../product.service';
 import {switchMap} from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { product } from '../models/product';
+import { productKey as product } from '../models/ProductKey';
+import { ShoppingCartService } from '../shopping-cart.service';
 
 
 
@@ -12,12 +13,14 @@ import { product } from '../models/product';
   styleUrls: ['./products.component.css']
 })
 
-export class ProductsComponent {
+export class ProductsComponent implements OnInit, OnDestroy {
   products: product[] = [];
   filteredProducts: product[] = [];
   category: string;
-    constructor( productService: ProductService, route: ActivatedRoute ) {
-      productService.getAll().valueChanges()
+  cart: any;
+  subscription: any;
+    constructor( productService: ProductService, route: ActivatedRoute,  private cartService: ShoppingCartService ) {
+      productService.getAll()
       .pipe(switchMap(prods => {
         this.products = prods;
         return route.queryParamMap;
@@ -30,4 +33,11 @@ export class ProductsComponent {
         });
 
    }
+    async ngOnInit() {
+    this.subscription = (await this.cartService.getCart()).valueChanges().subscribe(cart => this.cart = cart);
+    }
+    // after subscripting the component it needs to be destroyed.
+    ngOnDestroy() {
+    this.subscription.unsubscribe();
+    }
 }
